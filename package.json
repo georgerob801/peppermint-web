@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "better-sqlite3": "^8.4.0",
+    "cssesc": "^3.0.0",
+    "encodeurl": "^1.0.2",
     "express": "^4.18.2",
     "express-routemap": "^1.6.0",
     "nodemon": "^2.0.22",
@@ -18,6 +20,7 @@
     "randomstring": "^1.2.3",
     "snowflake-id": "^1.1.0",
     "vhost": "^3.0.2",
-    "winston": "^3.9.0"
+    "winston": "^3.9.0",
+    "xss": "^1.0.14"
   }
 }
