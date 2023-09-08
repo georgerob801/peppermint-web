@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Bowlby+One&family=Poppins:ital,wght@0,200;0,400;0,700;1,400&display=swap');
+
+:root {
+    --logo-sans: 'Bowlby One', sans-serif;
+    --sans: 'Poppins', sans-serif;
+
+    --green-1: #89ff64;
+    --green-2: #aaff9d;
+    --bg: #595f72;
+    --light: #ffffff;
+    --dark: #333333;
+    --mid: #c3bef7;
+}
+
+html, body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--light);
+    font-family: var(--sans);
+}
+
+.logo {
+    font-family: var(--logo-sans);
+}
+
+.logo-image {
+    background-image: url("/android-chrome-512x512.png");
+    background-position: center;
+    background-size: cover;
+    aspect-ratio: 1 / 1;
+}
+
+.logo .logo-image + :is(div, h1) {
+    margin-left: 24px;
+    font-size: 48px;
+}
