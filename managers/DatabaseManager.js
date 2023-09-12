@@ -27,11 +27,11 @@ class DatabaseManager {
      * @private
      */
     static #tableDefinitions = [
-		"user (id TEXT, displayName TEXT NOT NULL, iconURL TEXT, passwordHash TEXT NOT NULL, sessionIdentifier TEXT UNIQUE, permissions INTEGER, PRIMARY KEY (id))",
-        "project (id TEXT, title TEXT, description TEXT, iconURL TEXT, PRIMARY KEY (id))",
+		"users (id TEXT, displayName TEXT, handle TEXT NOT NULL UNIQUE, iconURL TEXT, passwordHash TEXT NOT NULL, sessionIdentifier TEXT UNIQUE, permissions INTEGER, PRIMARY KEY (id))",
+        "projects (id TEXT, title TEXT, description TEXT, iconURL TEXT, PRIMARY KEY (id))",
         "projectPermissions (projectID TEXT, userID TEXT, permissions INTEGER, PRIMARY KEY (projectID, userID))",
-        "release (projectID TEXT, timestamp INTEGER, version TEXT, releaseNotes TEXT, fileLocation TEXT, published BOOLEAN, PRIMARY KEY (projectID, timestamp))",
-        "comment (projectID TEXT, id TEXT, userID TEXT, timestamp INTEGER, edited BOOLEAN, content TEXT,  PRIMARY KEY (projectID, id))"
+        "releases (projectID TEXT, timestamp INTEGER, version TEXT, releaseNotes TEXT, fileLocation TEXT, published BOOLEAN, PRIMARY KEY (projectID, timestamp))",
+        "comments (projectID TEXT, id TEXT, userID TEXT, timestamp INTEGER, edited BOOLEAN, content TEXT,  PRIMARY KEY (projectID, id))"
     ]
 
     /**
