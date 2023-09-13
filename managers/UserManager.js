@@ -53,7 +53,7 @@ class UserManager {
      */
     static findByProperty(prop, val) {
         // ensure existence of column
-        if (!operation(db => db.prepare("PRAGME table_info(user)").all()).map(x => x.name).includes(prop)) throw new Error(`The property '${prop}' doesn't exist.`);
+        if (!operation(db => db.prepare("PRAGMA table_info(users)").all()).map(x => x.name).includes(prop)) throw new Error(`The property '${prop}' doesn't exist.`);
 
         // then get by property
         let entry = operation(db => db.prepare(`SELECT * FROM users WHERE ${prop} = ?`).get(val));
@@ -128,31 +128,29 @@ class User {
      * @returns {User} This user.
      */
     save(column) {
-        // shorthand
-        let f = this.#getForDB;
         // if no column specified save entire user
         if (!column) {
             // ensure ID is set
             this.checkID();
             this.checkSessionIdentifier();
             // check previous records
-            if (operation(db => db.prepare("SELECT id FROM users WHERE id = ?").get(f("id")))) {
+            if (operation(db => db.prepare("SELECT id FROM users WHERE id = ?").get(this.#getForDB("id")))) {
                 // exists, overwrite
-                operation(db => db.prepare("UPDATE users SET displayName = ?, handle = ?, iconURL = ?, passwordHash = ?, sessionIdentifier = ?, permissions = ? WHERE id = ?").run(f("displayName"), f("handle"), f("iconURL"), f("passwordHash"), f("sessionIdentifier"), f("permissions"), f("id")));
+                operation(db => db.prepare("UPDATE users SET displayName = ?, handle = ?, iconURL = ?, passwordHash = ?, sessionIdentifier = ?, permissions = ? WHERE id = ?").run(this.#getForDB("displayName"), this.#getForDB("handle"), this.#getForDB("iconURL"), this.#getForDB("passwordHash"), this.#getForDB("sessionIdentifier"), this.#getForDB("permissions"), this.#getForDB("id")));
             } else {
                 // doesn't exist, create new
-                operation(db => db.prepare("INSERT INTO users (id, displayName, handle, iconURL, passwordHash, sessionIdentifier, permissions VALUES (?, ?, ?, ?, ?, ?, ?)").run(f("id"), f("displayName"), f("handle"), f("iconURL"), f("passwordHash"), f("sessionIdentifier"), f("permissions")));
+                operation(db => db.prepare("INSERT INTO users (id, displayName, handle, iconURL, passwordHash, sessionIdentifier, permissions VALUES (?, ?, ?, ?, ?, ?, ?)").run(this.#getForDB("id"), this.#getForDB("displayName"), this.#getForDB("handle"), this.#getForDB("iconURL"), this.#getForDB("passwordHash"), this.#getForDB("sessionIdentifier"), this.#getForDB("permissions")));
             }
         } else {
             // ensure existence first
             if (!this.id) throw new Error("No ID set.")
-            if (!operation(db => db.prepare("SELECT id FROM users WHERE id = ?").get(f("id")))) throw new Error("Column-specific updates only work with existing records.");
+            if (!operation(db => db.prepare("SELECT id FROM users WHERE id = ?").get(this.#getForDB("id")))) throw new Error("Column-specific updates only work with existing records.");
 
             // ensure existence of column
-            if (!operation(db => db.prepare("PRAGMA table_info(user)").all()).map(x => x.name).includes(column)) throw new Error(`The property '${column}' doesn't exist.`);
+            if (!operation(db => db.prepare("PRAGMA table_info(users)").all()).map(x => x.name).includes(column)) throw new Error(`The property '${column}' doesn't exist.`);
 
             // then set property
-            operation(db => db.prepare(`UPDATE users SET ${column} = ? WHERE id = ?`).run(f(column), f("id")));
+            operation(db => db.prepare(`UPDATE users SET ${column} = ? WHERE id = ?`).run(this.#getForDB(column), this.#getForDB("id")));
         }
 
         // return the user

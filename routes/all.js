@@ -1,27 +1,31 @@
 'use strict';
 
 const { join } = require("path");
+const bodyParser = require("body-parser");
 
 /** @type {import("../managers/ServerManager").RouteObject} */
 module.exports = {
     path: "*",
-    priority: 0,
+    priority: -256,
     specificUsePriorities: [
         256,
-        255
+        255,
+        254
     ],
     use: [
         require("express").static(join(__dirname, "../", "public")),
+        bodyParser.urlencoded({ extended: true }),
         (req, res, next) => {
             if (!req.user) {
-                res.render("main/loginblock", { req });
+                // if (req.baseUrl + req.path != "/") return res.redirect("/");
+                if (req.baseUrl + req.path != "/login") return res.render("main/loginblock", { req });
             } else {
                 req.cssesc = require("cssesc");
                 req.xss = require("xss");
                 req.encodeurl = require("encodeurl");
                 req.cssurl = url => req.xss(req.encodeurl(url || "") || "") || "";
-                next();
             }
+            next();
         }
     ],
     methods: {

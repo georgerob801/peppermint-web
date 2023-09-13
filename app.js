@@ -1,6 +1,7 @@
 'use strict';
 
 const { join } = require("path");
+const passport = require("passport");
 
 // setup logger
 require("./managers/LoggingManager").createLogger(join(__dirname, "config", "logs", "settings.json"));
@@ -20,6 +21,21 @@ process.pugBaseDir = join(__dirname, "views");
 
 // setup routes + no vhosts
 serverManager.addRouteDirectory(join(__dirname, "routes"));
+
+// passport
+require("./passport/setup");
+
+// session cookies
+serverManager.app.use(require("cookie-parser")());
+serverManager.app.use(require("cookie-session")({
+    keys: [require("./config/server/keys.json").session.cookie],
+    domain: `${require("./config/server/meta.json").basehostname}`,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: true
+}));
+
+serverManager.app.use(passport.initialize());
+serverManager.app.use(passport.session());
 
 // and gooooooo
 serverManager.setupFromState();
