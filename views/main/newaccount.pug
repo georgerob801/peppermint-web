@@ -1,7 +1,7 @@
 extends /main/layouts/genericblock
 
 block title
-    title peppermint
+    title peppermint - new account
 
 block postHead
     link(rel="stylesheet" type="text/css" href="/css/loginblock/style.css")
@@ -15,20 +15,18 @@ block content
 
             .login-thing
                 .d-flex.justify-content-between.w-100
-                    h3 login
+                    h3 new account
                     small
-                        a(href="/newaccount") create account
+                        a(href="/") login
 
-                form(action="/login" method="POST")
+                form(action="/newaccount" method="POST")
                     .mb-2
                         label.form-label(for="username") username
                         input.form-control(type="text" name="username" id="username" placeholder="exampleusername" autocomplete="off" value=req.query.username)
                     .mb-2
                         label.form-label(for="password") password
-                        input.form-control(type="password" name="password" id="password")
+                        input.form-control(type="text" name="password" id="password")
                     .mt-3
-                        button.btn.btn-primary.w-100(type="submit") login
+                        button.btn.btn-primary.w-100(type="submit") create account
                     if (req.query.issue)
                         .mt-4(style="color: red;")= req.query.issue
-                    if (req.query.message)
-                        .mt-4(style="color: blue;")= req.query.message

@@ -17,3 +17,14 @@ main {
 .login-thing form label {
     margin-bottom: 4px;
 }
+
+.login-thing > .d-flex small a {
+    color: #000000;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+    text-decoration: none;
+}
+
+.login-thing > .d-flex small a:hover {
+    opacity: 0.8;
+}

@@ -1,7 +1,13 @@
 extends /main/layouts/generic
 
 block title
-    title Test page
+    title peppermint - dashboard
 
 block content
-    h1 HAHA IT WORKED
+    .logo.d-flex.align-items-center.user-select-none
+        .logo-image(style="width: 84px; filter: brightness(10) brightness(0.4);")
+        h1 peppermint
+    .recent-projects.mt-4
+        h4 recently uploaded
+    .own-projects.mt-4
+        h4 your projects

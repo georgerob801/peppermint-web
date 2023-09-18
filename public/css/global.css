@@ -34,3 +34,15 @@ html, body {
     margin-left: 24px;
     font-size: 48px;
 }
+
+main.main {
+    border-radius: 48px;
+    padding: 48px;
+    background-color: var(--light);
+}
+
+body .container:has(main.main) {
+    padding-top: 48px;
+    padding-bottom: 48px;
+    color: var(--dark);
+}

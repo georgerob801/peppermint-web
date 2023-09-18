@@ -22,7 +22,7 @@ passport.use(
         (handle, password, done) => {
             let user = UserManager.findByProperty("handle", handle);
             if (!user) return done(null, false);
-            if (!user.checkPassword(password)) return(null, false);
+            if (!user.checkPassword(password)) return done(null, false);
             return done(null, user);
         }
     )

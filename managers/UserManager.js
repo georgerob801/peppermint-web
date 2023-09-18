@@ -10,7 +10,7 @@ const { generate: randomString } = require("randomstring");
 // db stuff
 const { operation } = require("./DatabaseManager");
 
-const { compareSync } = require("bcrypt");
+const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
 /**
  * @typedef {Object} User
@@ -60,8 +60,17 @@ class UserManager {
 
         if (!entry) return undefined;
 
-        let user = this.newUser();
+        let user = UserManager.newUser();
         return user.readFromEntry(entry);
+    }
+
+    /**
+     * Hash a password.
+     * @param {String} password The password to hash.
+     * @returns {String} The hashed password.
+     */
+    static hashPassword(password) {
+        return hashSync(password, genSaltSync(Math.ceil(Math.random() * 16)));
     }
 }
 
@@ -139,7 +148,7 @@ class User {
                 operation(db => db.prepare("UPDATE users SET displayName = ?, handle = ?, iconURL = ?, passwordHash = ?, sessionIdentifier = ?, permissions = ? WHERE id = ?").run(this.#getForDB("displayName"), this.#getForDB("handle"), this.#getForDB("iconURL"), this.#getForDB("passwordHash"), this.#getForDB("sessionIdentifier"), this.#getForDB("permissions"), this.#getForDB("id")));
             } else {
                 // doesn't exist, create new
-                operation(db => db.prepare("INSERT INTO users (id, displayName, handle, iconURL, passwordHash, sessionIdentifier, permissions VALUES (?, ?, ?, ?, ?, ?, ?)").run(this.#getForDB("id"), this.#getForDB("displayName"), this.#getForDB("handle"), this.#getForDB("iconURL"), this.#getForDB("passwordHash"), this.#getForDB("sessionIdentifier"), this.#getForDB("permissions")));
+                operation(db => db.prepare("INSERT INTO users (id, displayName, handle, iconURL, passwordHash, sessionIdentifier, permissions) VALUES (?, ?, ?, ?, ?, ?, ?)").run(this.#getForDB("id"), this.#getForDB("displayName"), this.#getForDB("handle"), this.#getForDB("iconURL"), this.#getForDB("passwordHash"), this.#getForDB("sessionIdentifier"), this.#getForDB("permissions")));
             }
         } else {
             // ensure existence first
@@ -196,6 +205,16 @@ class User {
      */
     checkPassword(password) {
         return compareSync(password, this.#passwordHash);
+    }
+
+    /**
+     * Set this user's password.
+     * @param {String} password The password to set.
+     * @returns {User} This user.
+     */
+    setPassword(password) {
+        this.#passwordHash = UserManager.hashPassword(password);
+        return this;
     }
 }
 

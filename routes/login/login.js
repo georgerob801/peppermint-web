@@ -13,7 +13,7 @@ module.exports = {
     ],
     methods: {
         post: (req, res, next) => {
-            passport.authenticate("local", { failureRedirect: "/?issue=Invalid username or password." })(req, res, next);
+            passport.authenticate("local", { failureRedirect: `/?issue=Invalid username or password.${req.body.username ? `&username=${encodeURIComponent(req.body.username)}` : "" }` })(req, res, next);
         },
         get: (req, res, next) => {
             res.send("nope this is not how this works")

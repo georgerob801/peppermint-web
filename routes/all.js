@@ -18,7 +18,7 @@ module.exports = {
         (req, res, next) => {
             if (!req.user) {
                 // if (req.baseUrl + req.path != "/") return res.redirect("/");
-                if (req.baseUrl + req.path != "/login") return res.render("main/loginblock", { req });
+                if (!["/login", "/newaccount"].includes(req.baseUrl + req.path)) return res.render("main/loginblock", { req });
             } else {
                 req.cssesc = require("cssesc");
                 req.xss = require("xss");
