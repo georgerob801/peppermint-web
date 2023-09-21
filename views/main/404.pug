@@ -1,0 +1,22 @@
+extends /main/layouts/genericblock
+
+block title
+    title peppermint - 404
+
+block postHead
+    link(rel="stylesheet" type="text/css" href="/css/loginblock/style.css")
+
+block content
+    .d-flex.justify-content-center.align-items-center.h-100
+        .centre-thing
+            .logo.d-flex.align-items-center.user-select-none
+                .logo-image(style="width: 84px;")
+                h1 peppermint
+
+            .login-thing(style="max-width: 450px;")
+                .d-flex.justify-content-start.w-100
+                    h3 404
+                
+                div.
+                    looks like this page doesn't exist. maybe try going
+                    back #[a(href="/") here]?

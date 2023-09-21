@@ -12,5 +12,16 @@ html
         block preMain
 
         .container
+            .top-bar.d-flex.justify-content-between.mb-4.align-items-center
+                .logo.d-flex.justify-content-center.user-select-none
+                    a(href="/")
+                        .logo-image(style="width: 84px;")
+                a(href=`/user/${req.user.handle}`)
+                    .d-flex.align-items-center.large-on-hover
+                        .username.me-3= req.user.displayName
+                        .profile-image(style=`background-image: url(${req.cssesc(req.user.iconURL)}), url(/img/user-unavailable.svg)`)
+            
+            block preContent
+
             main.main
                 block content

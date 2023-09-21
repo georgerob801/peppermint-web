@@ -1,0 +1,21 @@
+main .short-info {
+    width: 200px;
+}
+
+main .short-info * {
+    line-break: anywhere;
+}
+
+main .profile-image {
+    width: 200px;
+    background-size: cover;
+    background-position: center;
+    aspect-ratio: 1;
+    border-radius: 25%;
+}
+
+.control-stuff {
+    border-radius: 48px;
+    padding: 48px;
+    background-color: var(--light);
+}

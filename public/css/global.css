@@ -10,6 +10,8 @@
     --light: #ffffff;
     --dark: #333333;
     --mid: #c3bef7;
+
+    --exp: cubic-bezier(0, 0, 0, 0.99);
 }
 
 html, body {
@@ -17,6 +19,35 @@ html, body {
     background-color: var(--bg);
     color: var(--light);
     font-family: var(--sans);
+}
+
+  /* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--light) var(--bg);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--light);
+    border-radius: 10px;
+    border: 5px solid var(--bg);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #9f9f9f;
+}
+
+*::-webkit-scrollbar-thumb:active {
+    background-color: #d9d9d9;
 }
 
 .logo {
@@ -42,7 +73,53 @@ main.main {
 }
 
 body .container:has(main.main) {
-    padding-top: 48px;
+    padding-top: 24px;
     padding-bottom: 48px;
+    color: var(--dark);
+} 
+
+.top-bar .logo a .logo-image {
+    filter: hue-rotate(0deg);
+    transition: transform 0.3s var(--exp), filter 0.7s;
+}
+
+.top-bar .logo a .logo-image:hover {
+    filter: hue-rotate(359deg);
+    transform: scale(1.1);
+}
+
+.top-bar a {
+    text-decoration: none;
+}
+
+.top-bar, .top-bar a {
+    color: var(--light);
+}
+
+.top-bar .large-on-hover {
+    transition: transform 0.2s var(--exp);
+}
+
+.top-bar .large-on-hover:hover {
+    transform: scale(1.06);
+}
+
+.top-bar .profile-image {
+    aspect-ratio: 1;
+    background-size: cover;
+    background-position: center;
+    width: 48px;
+    border-radius: 50%;
+}
+
+
+
+
+
+.col-light {
+    color: var(--light);
+}
+
+.col-dark {
     color: var(--dark);
 }

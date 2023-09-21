@@ -10,6 +10,7 @@ const { generate: randomString } = require("randomstring");
 // db stuff
 const { operation } = require("./DatabaseManager");
 
+// password hashing
 const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
 /**
@@ -26,6 +27,11 @@ class UserManager {
         if (this instanceof UserManager) throw Error("UserManager cannot be instantiated.");
     }
 
+    /**
+     * Get a user from their ID.
+     * @param {String} id The user's ID.
+     * @returns {User|undefined} The user.
+     */
     static get(id) {
         // ensure the user exists
         if (!id || !operation(db => db.prepare("SELECT id FROM users WHERE id = ?").get(id))) return undefined;
@@ -81,6 +87,23 @@ class UserManager {
 class User {
     #passwordHash;
     #permissionsBitfield;
+    id;
+    handle;
+    iconURL;
+    sessionIdentifier;
+
+    #_displayName;
+
+    get displayName() {
+        return this.#_displayName || this.handle;
+    }
+
+    /**
+     * @param {String} name
+     */
+    set displayName(name) {
+        this.#_displayName = name;
+    }
 
     /**
      * Read a database entry's values into this user.
@@ -110,8 +133,11 @@ class User {
             case "permissions":
                 this.#permissionsBitfield = value;
                 break;
+            case "displayName":
+                this.#_displayName = value;
             default:
                 this[type] = value;
+                break;
         }
     }
 
@@ -126,6 +152,8 @@ class User {
                 return this.#passwordHash;
             case "permissions":
                 return this.#permissionsBitfield;
+            case "displayName":
+                return this.#_displayName;
             default:
                 return this[type];
         }
@@ -214,6 +242,15 @@ class User {
      */
     setPassword(password) {
         this.#passwordHash = UserManager.hashPassword(password);
+        return this;
+    }
+
+    /**
+     * Prepare this user for front-end display.
+     * @returns {User} This user.
+     */
+    prepareForDisplay() {
+        this.displayName ??= this.handle;
         return this;
     }
 }

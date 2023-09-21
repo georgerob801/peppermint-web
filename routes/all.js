@@ -29,8 +29,8 @@ module.exports = {
         }
     ],
     methods: {
-        all: (req, res) => {
-            res.render("main/landing", { req });
+        all: (req, res, next) => {
+            return next();
         }
     }
 }

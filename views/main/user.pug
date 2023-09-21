@@ -1,0 +1,37 @@
+extends /main/layouts/generic
+
+block title
+    title= `peppermint - ${user.displayName}`
+
+block postHead
+    link(rel="stylesheet" type="text/css" href="/css/user/style.css")
+
+block preContent
+    - if (req.user.id == user.id)
+        h2.col-light.mb-3.text-center.user-select-none control stuff
+        .control-stuff.mb-4
+            div
+                h4.user-select-none project stuff
+                a.btn.btn-primary(href="/new") new project
+                a.btn.btn-primary.ms-3(href="/manage") manage projects
+            .mt-4
+                h4.user-select-none user stuff
+            
+
+        h2.col-light.mb-3.text-center.user-select-none public profile
+
+block content
+    .d-flex.flex-column.flex-md-row
+        .short-info
+            if (user.iconURL)
+                .profile-image.mb-2(style=`background-image: url(${req.cssesc(user.iconURL)}), url(/img/user-unavailable.svg);`)
+            h2.mb-0= user.displayName
+            small.mb-0
+                span.user-select-none @
+                span= user.handle
+        .everything-else.flex-fill
+            .ms-0.mt-3.mt-md-0.ms-md-4
+                .mb-4
+                    h4.user-select-none projects
+                .mb-4
+                    h4.user-select-none comments
