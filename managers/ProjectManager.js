@@ -7,6 +7,8 @@ const snowflake = new SnowflakeID();
 // db stuff
 const { operation } = require("./DatabaseManager");
 
+const { get: getUser } = require("./UserManager");
+
 /**
  * @typedef {Object} Project
  * @property {String} id
@@ -54,6 +56,13 @@ class Project {
     description;
     iconURL;
 
+    #_contributors;
+    
+    get contributors() {
+        this.#_contributors ??= this.getContributors();
+        return this.#_contributors
+    }
+
     /**
      * Read a database entry's values into this user.
      * @param {Object} entry The database entry to read from.
@@ -93,6 +102,14 @@ class Project {
             default:
                 return this[type];
         }
+    }
+
+    /**
+     * Get all contributors. (cached in Project#contributors)
+     * @returns {import("./UserManager").User[]} Users that are listed as contributors for this project.
+     */
+    getContributors() {
+        return operation(db => db.prepare("SELECT userID FROM projectPermissions WHERE projectID = ? AND permissions > 0").all(this.id)).map(x => x.userID).filter(x => x).map(x => getUser(x));
     }
 
     /**

@@ -12,10 +12,11 @@ block preContent
         .control-stuff.mb-4
             div
                 h4.user-select-none project stuff
-                a.btn.btn-primary(href="/new") new project
-                a.btn.btn-primary.ms-3(href="/manage") manage projects
+                a.btn.btn-primary(href="/new") #[i.fa-solid.fa-file] new project
+                a.btn.btn-primary.ms-3(href="/manage") #[i.fa-solid.fa-pen-to-square] manage projects
             .mt-4
                 h4.user-select-none user stuff
+                a.btn.btn-danger(href="/logout") #[i.fa-solid.fa-right-from-bracket] logout
             
 
         h2.col-light.mb-3.text-center.user-select-none public profile
@@ -24,7 +25,7 @@ block content
     .d-flex.flex-column.flex-md-row
         .short-info
             if (user.iconURL)
-                .profile-image.mb-2(style=`background-image: url(${req.cssesc(user.iconURL)}), url(/img/user-unavailable.svg);`)
+                .profile-image.mb-2(style=`background-image: url(${req.cssurl(user.iconURL)}), url(/img/user-unavailable.svg);`)
             h2.mb-0= user.displayName
             small.mb-0
                 span.user-select-none @

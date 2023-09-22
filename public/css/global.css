@@ -112,8 +112,18 @@ body .container:has(main.main) {
     border-radius: 50%;
 }
 
+.clmp {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+}
 
-
+.clmp-2 {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
 
 
 .col-light {

@@ -1,4 +1,31 @@
 extends /main/layouts/generic
 
 block title
-    title peppermint
+    title= `peppermint - ${project.title || project.id}`
+
+block postHead
+    link(rel="stylesheet" href="/css/project/style.css" type="text/css")
+
+block content
+    h1.mb-4.clmp= project.title || project.id
+    .main-image
+    .d-flex.row
+        .col-12.col-md-6
+            .mb-3
+                .preview-image(style=`background-image: url(${req.cssurl(project.iconURL)}), url(/img/image-unavailable.svg)`)
+            h4 description
+            p= project.description
+        .col-12.col-md-6
+            - if (project.contributors.length)
+                .mb-3
+                    h4 contributors
+                    - for (let i = 0; i < project.contributors.length; i++)
+                        .contributor(class=(i != project.contributors.length - 1 ? "mb-3" : ""))
+                            a(href=`/user/${project.contributors[i].handle}`).d-flex.align-items-center
+                                .profile-image.me-2(style=`background-image: url(${req.cssurl(project.contributors[i].iconURL || "")}), url(/img/user-unavailable.svg)`)
+                                .names.d-flex.flex-column
+                                    .username.clmp= project.contributors[i].displayName
+                                    small.handle.clmp
+                                        span.user-select-none @
+                                        span= project.contributors[i].handle
+            h4 releases

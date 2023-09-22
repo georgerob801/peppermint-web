@@ -13,6 +13,9 @@ const { operation } = require("./DatabaseManager");
 // password hashing
 const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
+// permissions management
+const { get: permissionsGet } = require("./PermissionManager");
+
 /**
  * @typedef {Object} User
  * @property {String} id
@@ -157,6 +160,15 @@ class User {
             default:
                 return this[type];
         }
+    }
+
+    /**
+     * 
+     * @param {String} projectID The project ID to get permissions for.
+     * @returns {import("./PermissionManager").Permissions|undefined}
+     */
+    permissionsFor(projectID) {
+        return permissionsGet(this.id, projectID);
     }
 
     /**

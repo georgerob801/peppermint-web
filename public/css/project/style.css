@@ -1,0 +1,39 @@
+main {
+    word-break: break-word;
+}
+
+main .profile-image {
+    width: 48px;
+    background-size: cover;
+    background-position: center;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+main .names small.handle {
+    opacity: 0.6;
+    font-size: 12px;
+}
+
+main .preview-image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 7px;
+    background-position: center;
+    background-size: cover;
+}
+
+main .contributor {
+    width: fit-content;
+    transition: transform 0.2s var(--exp);
+}
+
+main .contributor:hover {
+    transform: scale(1.04);
+}
+
+main .contributor a {
+    color: inherit;
+    text-decoration: none;
+}

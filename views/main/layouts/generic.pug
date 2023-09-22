@@ -19,7 +19,7 @@ html
                 a(href=`/user/${req.user.handle}`)
                     .d-flex.align-items-center.large-on-hover
                         .username.me-3= req.user.displayName
-                        .profile-image(style=`background-image: url(${req.cssesc(req.user.iconURL)}), url(/img/user-unavailable.svg)`)
+                        .profile-image(style=`background-image: url(${req.user && req.user.iconURL ? req.cssurl(req.user.iconURL) : ""}), url(/img/user-unavailable.svg)`)
             
             block preContent
 

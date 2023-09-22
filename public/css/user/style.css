@@ -19,3 +19,7 @@ main .profile-image {
     padding: 48px;
     background-color: var(--light);
 }
+
+.control-stuff .fa-solid {
+    margin-right: 5px;
+}
