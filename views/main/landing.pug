@@ -1,5 +1,10 @@
 extends /main/layouts/generic
 
+include /main/mixins/projectpreview
+
+block postHead
+    link(rel="stylesheet" type="text/css" href="/css/project/preview.css")
+
 block title
     title peppermint - dashboard
 
@@ -8,3 +13,6 @@ block content
         h4.user-select-none recently uploaded
     .own-projects.mt-4
         h4.user-select-none your projects
+        .row
+            - for (let i = 0; i < projects.length; i++)
+                +projectpreview(projects[i], "col-12 col-sm-6 col-md-4 col-lg-3")

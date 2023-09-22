@@ -61,7 +61,7 @@ class PermissionManager {
      */
     static get(userID, projectID) {
         if (!userID || !projectID) throw new Error("Both a user ID and a project ID are required to get permissions.");
-        let entry = operation(db => db.prepare("SELECT * FROM projectPermissions WHERE projectID = ?, userID = ?").get(userID, projectID));
+        let entry = operation(db => db.prepare("SELECT * FROM projectPermissions WHERE projectID = ? AND userID = ?").get(projectID, userID));
         if (!entry) return undefined;
 
         let permissions = new Permissions();

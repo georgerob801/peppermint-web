@@ -1,0 +1,26 @@
+.project-preview {
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s var(--exp);
+}
+
+.project-preview:hover {
+    transform: scale(1.05);
+    color: inherit;
+}
+
+.project-preview .preview-image {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 7px;
+    background-position: center;
+    background-size: cover;
+}
+
+.project-preview .preview-text h6 {
+    margin-bottom: 0;
+}
+
+.project-preview .preview-text small {
+    opacity: 0.6;
+}

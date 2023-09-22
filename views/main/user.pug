@@ -1,10 +1,13 @@
 extends /main/layouts/generic
 
+include /main/mixins/projectpreview
+
 block title
     title= `peppermint - ${user.displayName}`
 
 block postHead
     link(rel="stylesheet" type="text/css" href="/css/user/style.css")
+    link(rel="stylesheet" type="text/css" href="/css/project/preview.css")
 
 block preContent
     - if (req.user.id == user.id)
@@ -32,7 +35,11 @@ block content
                 span= user.handle
         .everything-else.flex-fill
             .ms-0.mt-3.mt-md-0.ms-md-4
-                .mb-4
-                    h4.user-select-none projects
+                - if (projects && projects.length)
+                    .mb-4
+                        h4.user-select-none projects
+                        .row
+                            - for (let i = 0; i < projects.length; i++)
+                                +projectpreview(projects[i], "col-12 col-sm-6 col-md-4 col-lg-3")
                 .mb-4
                     h4.user-select-none comments
