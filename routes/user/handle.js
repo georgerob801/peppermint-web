@@ -1,12 +1,14 @@
 'use strict';
 
-const { findByProperty } = require("../../managers/UserManager");
+const { findByProperty, get: getUser } = require("../../managers/UserManager");
 
 const { operation } = require("../../managers/DatabaseManager");
 
 const { get: getProject } = require("../../managers/ProjectManager");
 
-const { FLAGS } = require("../../managers/PermissionManager");
+const { PROJECT_FLAGS } = require("../../managers/PermissionManager");
+
+const { getForUser } = require("../../managers/CommentManager");
 
 module.exports = {
     path: "/:handle([a-z_\\-.]{1,30})",
@@ -21,12 +23,17 @@ module.exports = {
             let projects = operation(db => db.prepare("SELECT projectID FROM projectPermissions WHERE userID = ? AND permissions > 0").all(user.id).map(x => x.projectID).filter(x => x).map(x => getProject(x)));
 
             for (let i = 0; i < projects.length; i++) {
-                if (user.permissionsFor(projects[i].id).has(FLAGS.EDIT_SETTINGS)) projects[i].owner = true;
+                if (user.permissionsFor(projects[i].id).has(PROJECT_FLAGS.EDIT_SETTINGS)) projects[i].owner = true;
                 else projects[i].owner = false;
-                console.log(user.permissionsFor(projects[i].id).getAllowedPermissionNames());
             }
 
-            res.render("main/user", { req, user, projects });
+            let comments = getForUser(user.id);
+            for (let i = 0; i < comments.length; i++) {
+                comments[i].project = getProject(comments[i].projectID);
+                comments[i].user = getUser(comments[i].userID);
+            }
+
+            res.render("main/user", { req, user, projects, comments });
         }
     }
 }

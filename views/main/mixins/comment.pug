@@ -1,0 +1,15 @@
+mixin comment(comment, extraClass)
+    .comment.d-flex(class=extraClass)
+        a(href=`/user/${comment.user.id}`)
+            .profile-picture(style=`background-image: url(${req.cssurl(comment.user.iconURL)}), url(/img/user-unavailable.svg);`)
+        .comment-text.ms-2
+            .handle.clmp
+                span.user-select-none @
+                span
+                    a(href=`/user/${comment.user.id}`)= comment.user.handle
+                span ・
+                span= req.moment(comment.timestamp).fromNow()
+            if (!comment.content)
+                .comment-content(style="opacity: 0.6;") - empty comment -
+            else
+                .comment-content= comment.content

@@ -1,0 +1,8 @@
+main {
+    word-break: break-word;
+}
+
+main textarea {
+    overflow: hidden;
+    resize: none;
+}

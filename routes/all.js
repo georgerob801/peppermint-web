@@ -24,6 +24,7 @@ module.exports = {
                 req.xss = require("xss");
                 req.encodeurl = require("encodeurl");
                 req.cssurl = url => req.xss(req.encodeurl(url || "") || "") || "";
+                req.moment = require("moment");
             }
             next();
         }

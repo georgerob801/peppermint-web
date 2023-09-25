@@ -8,6 +8,8 @@ const snowflake = new SnowflakeID();
 const { operation } = require("./DatabaseManager");
 
 const { get: getUser } = require("./UserManager");
+const { getForProject: getReleases, newRelease, getRelease: releaseFromTimestamp } = require("./ReleaseManager");
+const { getForProject: getCommentsForProject, newComment } = require("./CommentManager");
 
 /**
  * @typedef {Object} Project
@@ -46,8 +48,6 @@ class ProjectManager {
     static newProject() {
         return new Project();
     }
-
-
 }
 
 class Project {
@@ -110,6 +110,56 @@ class Project {
      */
     getContributors() {
         return operation(db => db.prepare("SELECT userID FROM projectPermissions WHERE projectID = ? AND permissions > 0").all(this.id)).map(x => x.userID).filter(x => x).map(x => getUser(x));
+    }
+
+    /**
+     * Get the last n releases.
+     * @param {Number=} n The max number of releases to get.
+     * @param {Number=} offset The offset of the results.
+     * @param {Boolean=} publishedOnly Whether to limit the results to published releases.
+     * @returns {import("./ReleaseManager").Release[]} The releases.
+     */
+    lastNReleases(n, offset, publishedOnly) {
+        return getReleases(this.id, n, offset, publishedOnly);
+    }
+
+    /**
+     * Create a new release for this object.
+     * @returns {import("./ReleaseManager").Release} The release.
+     */
+    createRelease() {
+        let release = newRelease();
+        release.projectID = this.id;
+        return release;
+    }
+
+    /**
+     * Get a release from its timestamp.
+     * @param {Number} timestamp The timestamp of the release.
+     * @returns {import("./ReleaseManager").Release|undefined} The release if found.
+     */
+    getRelease(timestamp) {
+        return releaseFromTimestamp(this.id, timestamp);
+    }
+
+    /**
+     * Get comments for this project.
+     * @param {Number} limit The maximum number of comments to get.
+     * @param {Number} offset The number to offset the results by.
+     * @returns {import("./CommentManager").Comment[]} The comments.
+     */
+    getComments(limit, offset) {
+        return getCommentsForProject(this.id, limit, offset);
+    }
+
+    /**
+     * Create a new comment on this project.
+     * @returns {import("./CommentManager").Comment} The comment.
+     */
+    createComment() {
+        let comment = newComment();
+        comment.projectID = this.id;
+        return comment;
     }
 
     /**

@@ -1,12 +1,32 @@
 extends /main/layouts/generic
 
+include /main/mixins/comment
+
 block title
     title= `peppermint - ${project.title || project.id}`
 
 block postHead
     link(rel="stylesheet" href="/css/project/style.css" type="text/css")
+    link(rel="stylesheet" href="/css/project/comment.css" type="text/css")
+
+    script.
+        $(document).ready(() => {
+            if ($(".comment-editor") && $(".comment-editor form textarea").val()) $(".comment-editor form button").prop("disabled", false);
+            if ($(".comment-editor")[0]) {
+                $(".comment-editor form textarea").trigger("oninput");
+                $(".comment-editor form textarea")[0].addEventListener("keydown", e => {
+                    console.log(e)
+                    if (e.keyCode == 13 && e.ctrlKey) {
+                        console.log("hgiukferth")
+                        $(".comment-editor form button").trigger("click");
+                    }
+                })
+            }            
+        });
 
 block content
+    - if (canManage)
+        a.btn.btn-primary.mb-2(href=`/manage/${project.id}`) #[i.fa-solid.fa-pen-to-square(style="margin-right: 5px;")] manage
     h1.mb-4.clmp= project.title || project.id
     .main-image
     .d-flex.row
@@ -14,7 +34,7 @@ block content
             .mb-3
                 .preview-image(style=`background-image: url(${req.cssurl(project.iconURL)}), url(/img/image-unavailable.svg)`)
             h4 description
-            p= project.description
+            p.mb-3.mb-md-0= project.description || "no description provided."
         .col-12.col-md-6
             - if (project.contributors.length)
                 .mb-3
@@ -28,4 +48,38 @@ block content
                                     small.handle.clmp
                                         span.user-select-none @
                                         span= project.contributors[i].handle
-            h4 releases
+            h4 releases #[small.extra.ms-2 click a release for more]
+            .releases
+                - if (!releases || !releases.length)
+                    p.mb-0 this project has no releases.
+                - for (let i = 0; i < releases.length; i++)
+                    .release
+                        a.w-100(href=`/project/${project.id}/release/${releases[i].timestamp}` class=(i != releases.length - 1 ? "mb-1" : ""))
+                            .d-flex.justify-content-between
+                                .d-flex.flex-column.me-2
+                                    h5.mb-0.clmp= releases[i].version || "new version"
+                                    small= new Date(releases[i].timestamp).toLocaleDateString("en-gb", { year: "numeric", month: "numeric", day: "numeric" })
+                                .d-flex.align-items-center
+                                    a.btn.btn-primary.download-button(href=`/projects/${project.id}/release/${releases[i].timestamp}/download`)
+                                        i.fa-solid.fa-download
+    if (canComment || (comments && comments.length))
+        hr
+        .comments
+            h4 comments
+            .d-flex.flex-column
+                if (canComment)
+                    .comment-editor(class=(comments && comments.length ? "mb-4" : ""))
+                        form(method="POST" action=`/project/${project.id}/comment`)
+                            .comment.d-flex
+                                .profile-picture(style=`background-image: url(${req.cssurl(req.user.iconURL)}), url(/img/user-unavailable.svg);`)
+                                .comment-text.ms-2.flex-fill
+                                    .handle.clmp
+                                        span.user-select-none @
+                                        span= req.user.handle
+                                    .comment-content
+                                        textarea.form-control(name="content" rows="1" oninput="this.style.height = \"\"; this.style.height = this.scrollHeight + \"px\"; $(\".comment-editor form button\").prop(\"disabled\", $(this).val() ? false : true);" placeholder="write a comment")= req.query ? req.query.commentContent || "" : ""
+                                    if (req.query && req.query.commentError)
+                                        p.mb-0(style="color: red;")= req.query.commentError
+                                    button.btn.btn-primary.mt-2(type="submit" disabled) comment
+                - for (let i = 0; i < comments.length; i++)
+                    +comment(comments[i], i != comments.length - 1 ? "mb-3" : "")

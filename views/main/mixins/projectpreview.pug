@@ -2,6 +2,6 @@ mixin projectpreview(project, extraClass)
     a.project-preview.d-flex.flex-column(class=extraClass href=`/project/${project.id}`)
         .preview-image.mb-2(style=`background-image: url(${req.cssurl(project.iconURL)}), url(/img/image-unavailable.svg);`)
         .preview-text
-            h6.clmp.clmp-2= project.title
+            h6.clmp.clmp-2= project.title || project.id
             - if (project.owner !== undefined)
                 small= project.owner ? "owner" : "contributor"

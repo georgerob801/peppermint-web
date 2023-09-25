@@ -37,3 +37,29 @@ main .contributor a {
     color: inherit;
     text-decoration: none;
 }
+
+main small.extra {
+    font-size: 14px;
+    opacity: 0.6
+}
+
+main .releases a {
+    color: inherit;
+    text-decoration: none;
+}
+main .releases .release {
+    transition: all 0.2s var(--exp);
+}
+
+main .releases .release:hover {
+    transform: scale(1.01);
+}
+
+main .releases small {
+    opacity: 0.6;
+    margin-top: 2px;
+}
+
+main .releases .download-button {
+    color: var(--light);
+}

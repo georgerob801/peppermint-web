@@ -48,6 +48,7 @@ serverManager.app.use((err, req, res, next) => {
     }
 
     res.status(500);
+    res.render("main/500", { req })
     critical(err);
 });
 

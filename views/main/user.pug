@@ -1,6 +1,7 @@
 extends /main/layouts/generic
 
 include /main/mixins/projectpreview
+include /main/mixins/comment
 
 block title
     title= `peppermint - ${user.displayName}`
@@ -8,6 +9,7 @@ block title
 block postHead
     link(rel="stylesheet" type="text/css" href="/css/user/style.css")
     link(rel="stylesheet" type="text/css" href="/css/project/preview.css")
+    link(rel="stylesheet" type="text/css" href="/css/project/comment.css")
 
 block preContent
     - if (req.user.id == user.id)
@@ -40,6 +42,13 @@ block content
                         h4.user-select-none projects
                         .row
                             - for (let i = 0; i < projects.length; i++)
-                                +projectpreview(projects[i], "col-12 col-sm-6 col-md-4 col-lg-3")
-                .mb-4
-                    h4.user-select-none comments
+                                +projectpreview(projects[i], "col-12 col-md-6 col-lg-4 col-xl-3")
+                - if (comments && comments.length)
+                    .mb-0
+                        h4.user-select-none recent comments
+                        .comments
+                            - for (let i = 0; i < comments.length; i++)
+                                small.clmp(style="opacity: 0.6;")
+                                    span on 
+                                    a(href=`/project/${comments[i].project.id}`)= comments[i].project.title
+                                +comment(comments[i], (i != comments.length - 1 ? "mb-3" : ""))

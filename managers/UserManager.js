@@ -14,7 +14,7 @@ const { operation } = require("./DatabaseManager");
 const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
 // permissions management
-const { get: permissionsGet } = require("./PermissionManager");
+const { getProject: getProjectPermissions, getUser: getUserPermissions } = require("./PermissionManager");
 
 /**
  * @typedef {Object} User
@@ -108,6 +108,10 @@ class User {
         this.#_displayName = name;
     }
 
+    get permissions() {
+        return getUserPermissions(this.id);
+    }
+
     /**
      * Read a database entry's values into this user.
      * @param {Object} entry The database entry to read from.
@@ -165,10 +169,10 @@ class User {
     /**
      * 
      * @param {String} projectID The project ID to get permissions for.
-     * @returns {import("./PermissionManager").Permissions|undefined}
+     * @returns {import("./PermissionManager").Permissions}
      */
     permissionsFor(projectID) {
-        return permissionsGet(this.id, projectID);
+        return getProjectPermissions(this.id, projectID);
     }
 
     /**

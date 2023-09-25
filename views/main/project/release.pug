@@ -1,0 +1,30 @@
+extends /main/layouts/generic
+
+block title
+    - release.version ??= "new version"
+    - project.title ??= project.id
+    title= `peppermint - ${(release.version).substr(0, 16)}${release.version.length > 16 ? "..." : ""} - ${project.title}`
+
+block postHead
+    link(rel="stylesheet" type="text/css" href="/css/project/release.css")
+
+block content
+    .d-flex.justify-content-between
+        div.mb-1.clmp
+            small
+                span release of 
+                span #[a.clmp(href=`/project/${project.id}`)= `${project.title.substr(0, 32)}${project.title.length > 32 ? "..." : ""}`]
+        div.text-end
+            small(style="opacity: 0.6;")
+                span released 
+                span= new Date(release.timestamp).toLocaleDateString("en-gb", { year: "numeric", month: "numeric", day: "numeric" })
+    h1.mb-4.clmp.clmp-2= release.version
+    .d-flex.row
+        .col-12.col-md-6
+            h4 release notes
+            p.release-notes= release.releaseNotes || "none provided"
+        .col-12.col-md-6
+            h4 download
+            a.btn.btn-primary.text-center.w-100(href=`/project/${project.id}/release/${release.timestamp}/download` target="__blank") 
+                i.fa-solid.fa-download.me-2
+                span= `download ${(release.version).substr(0, 16)}${release.version.length > 16 ? "..." : ""}`
