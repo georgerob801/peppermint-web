@@ -217,11 +217,6 @@ class ProjectPermissions {
      * @returns {Boolean} True/false depending on whether the specified permission is granted.
      */
     has(flag) {
-        console.log(`bitfield: ${this.#bitfield}`);
-        console.log(`flag: ${flag}`);
-        console.log(`bitfield & flag: ${this.#bitfield & flag}`)
-        console.log(typeof(this.#bitfield & flag))
-        console.log(this.#bitfield & flag == flag)
         return this.#bitfield & flag == flag ? true : false;
     }
 

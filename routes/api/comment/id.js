@@ -20,6 +20,11 @@ module.exports = {
             res.json(comment);
         },
         delete: (req, res) => {
+            //      \/ \/ \/ \/ \/
+            //      \/ \/ \/ \/ \/
+            // ADD PERM CHECKINGGGGGGGG
+            //      /\ /\ /\ /\ /\
+            //      /\ /\ /\ /\ /\
             let id = req.params?.commentID;
             let comment = get(id);
             if (!comment) {

@@ -15,9 +15,7 @@ block postHead
             if ($(".comment-editor")[0]) {
                 $(".comment-editor form textarea").trigger("oninput");
                 $(".comment-editor form textarea")[0].addEventListener("keydown", e => {
-                    console.log(e)
                     if (e.keyCode == 13 && e.ctrlKey) {
-                        console.log("hgiukferth")
                         $(".comment-editor form button").trigger("click");
                     }
                 })

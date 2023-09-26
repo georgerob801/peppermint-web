@@ -4,6 +4,7 @@ block title
     title peppermint - #{(project.title || project.id).substr(0, 16)}#{(project.title || project.id).length > 16 ? "..." : ""} - manage
 
 block postHead
+    link(rel="stylesheet" href="/css/project/comment.css" type="text/css")
     link(rel="stylesheet" href="/css/manage/style.css" type="text/css")
 
     script(src="/js/manage/script.js")
@@ -44,8 +45,13 @@ block content
 
         h3 contributors
         .mb-3.contributors
+            .w-100.text-center
+                i.fa-solid.fa-spinner.fa-spin
 
         h3 comments
-        .mb-3 to do
+        .comment-delete-message.mb-2
+        .mb-3.comments
+            .w-100.text-center
+                i.fa-solid.fa-spinner.fa-spin
 
         button.btn.btn-success(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes
