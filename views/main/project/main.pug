@@ -22,6 +22,42 @@ block postHead
             }            
         });
 
+    script.
+        $(document).ready(() => {
+            const userID = "#{req.user.id}";
+            let thing = $(`
+            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center delete-overlay">
+                <div class="delete-comment">
+                    <div class="d-flex align-items-center delete-comment-content">
+                        <i class="fa-solid fa-dumpster-fire me-2"></i>
+                        <div>click to delete</div>
+                    </div>
+                </div>
+            </div>
+            `)
+            $(`.comment[data-user-id=${CSS.escape(userID)}]`).prepend(thing);
+            $(thing).find(".delete-comment").on("click", async e => {
+                let commentID = $(thing).parent().attr("data-comment-id");
+                $(`.comment[data-comment-id=${CSS.escape(commentID)}] .delete-comment-content`).html(`<i class="fa-solid fa-spinner fa-spin"></i>`);
+                
+                try {
+                    let res = await $.ajax({
+                        url: `/api/comment/${commentID}`,
+                        method: "DELETE"
+                    });
+
+                    if (res.status == 200) {
+                        $(`.comment-delete-message`).css("color", "var(--bs-success)");
+                        $(`.comment-delete-message`).text("deleted comment successfully.");
+                        $(`.comment[data-comment-id=${CSS.escape(commentID)}]`).remove();
+                    }
+                } catch (e) {
+                    $(`.comment-delete-message`).css("color", "var(--bs-danger)");
+                    $(`.comment-delete-message`).text("couldn't delete comment.");
+                }
+            });
+        });
+
 block content
     - if (canManage)
         a.btn.btn-primary.mb-2(href=`/manage/${project.id}`) #[i.fa-solid.fa-pen-to-square(style="margin-right: 5px;")] manage
@@ -64,6 +100,7 @@ block content
         hr
         .comments
             h4 comments
+            .comment-delete-message.mb-2
             .d-flex.flex-column
                 if (canComment)
                     .comment-editor(class=(comments && comments.length ? "mb-4" : ""))
@@ -80,4 +117,4 @@ block content
                                         p.mb-0(style="color: red;")= req.query.commentError
                                     button.btn.btn-primary.mt-2(type="submit" disabled) comment
                 - for (let i = 0; i < comments.length; i++)
-                    +comment(comments[i], i != comments.length - 1 ? "mb-3" : "")
+                    +comment(comments[i], "position-relative " + (i != comments.length - 1 ? "mb-3" : ""))

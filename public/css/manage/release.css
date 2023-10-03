@@ -1,0 +1,4 @@
+main textarea {
+    resize: none;
+    overflow: hidden;
+}

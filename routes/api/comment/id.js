@@ -1,6 +1,8 @@
 'use strict';
 
 const { get } = require("../../../managers/CommentManager");
+const { get: getProject } = require("../../../managers/ProjectManager");
+const { PROJECT_FLAGS } = require("../../../managers/PermissionManager");
 
 module.exports = {
     path: "/:commentID([0-9]+)",
@@ -20,11 +22,14 @@ module.exports = {
             res.json(comment);
         },
         delete: (req, res) => {
-            //      \/ \/ \/ \/ \/
-            //      \/ \/ \/ \/ \/
-            // ADD PERM CHECKINGGGGGGGG
-            //      /\ /\ /\ /\ /\
-            //      /\ /\ /\ /\ /\
+            if (!req.user) {
+                res.status(401);
+                return res.json({
+                    status: 401,
+                    message: "Unauthorised."
+                });
+            }
+
             let id = req.params?.commentID;
             let comment = get(id);
             if (!comment) {
@@ -32,6 +37,14 @@ module.exports = {
                 return res.json({
                     status: 404,
                     message: "Comment not found."
+                });
+            }
+
+            if (!req.user.permissionsFor(comment.projectID).has(PROJECT_FLAGS.EDIT_SETTINGS) && comment.userID != req.userID) {
+                res.status(403);
+                return res.json({
+                    status: 403,
+                    message: "Cannot delete this comment."
                 });
             }
 

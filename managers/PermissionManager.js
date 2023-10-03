@@ -130,7 +130,16 @@ class UserPermissions {
      * @returns {Boolean} True/false depending on whether the specified permission is granted.
      */
     has(flag) {
-        return this.#bitfield & flag == flag ? true : false;
+        return (this.#bitfield & flag) == flag ? true : false;
+    }
+
+    /**
+     * Check for any of a set of permissions.
+     * @param {PermissionFlag} flags The permissions to check. 
+     * @returns {Boolean} True/false depending on whether any of the specified permissions are granted.
+     */
+    orHas(flags) {
+        return (this.#bitfield & flags) != 0;
     }
 
     /**
@@ -217,7 +226,16 @@ class ProjectPermissions {
      * @returns {Boolean} True/false depending on whether the specified permission is granted.
      */
     has(flag) {
-        return this.#bitfield & flag == flag ? true : false;
+        return (this.#bitfield & flag) == flag ? true : false;
+    }
+
+    /**
+     * Check for any of a set of permissions.
+     * @param {PermissionFlag} flags The permissions to check. 
+     * @returns {Boolean} True/false depending on whether any of the specified permissions are granted.
+     */
+    orHas(flags) {
+        return (this.#bitfield & flags) != 0;
     }
 
     /**

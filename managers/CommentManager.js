@@ -135,6 +135,9 @@ class Comment {
         return this;
     }
 
+    /**
+     * Delete this comment.
+     */
     delete() {
         operation(db => db.prepare("DELETE FROM comments WHERE id = ?").run(this.id));
         delete this;

@@ -1,5 +1,5 @@
 mixin comment(comment, extraClass)
-    .comment.d-flex(class=extraClass)
+    .comment.d-flex(class=extraClass data-comment-id=comment.id data-user-id=comment.user.id)
         a(href=`/user/${comment.user.id}`)
             .profile-picture(style=`background-image: url(${req.cssurl(comment.user.iconURL)}), url(/img/user-unavailable.svg);`)
         .comment-text.ms-2

@@ -26,3 +26,29 @@ main textarea {
 .comments .delete-comment {
     cursor: pointer;
 }
+
+.modal {
+    color: var(--dark);
+}
+
+.contributors .contributor:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+.handle-search input:focus {
+    box-shadow: none;
+}
+
+.handle-search-results {
+    background-color: var(--light);
+    padding: 24px;
+    border-end-start-radius: 0.375rem;
+    border-end-end-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    border-top: none;
+    z-index: 20;
+}
+
+.releases .release:not(:last-child) {
+    margin-bottom: 12px;
+}

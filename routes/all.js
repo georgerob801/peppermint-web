@@ -23,7 +23,7 @@ module.exports = {
                 req.cssesc = require("cssesc");
                 req.xss = require("xss");
                 req.encodeurl = require("encodeurl");
-                req.cssurl = url => req.xss(req.encodeurl(url || "") || "") || "";
+                req.cssurl = x => x ? require("css.escape")(x) : ""; //req.xss(req.encodeurl(url || "") || "") || "";
                 req.moment = require("moment");
             }
             next();

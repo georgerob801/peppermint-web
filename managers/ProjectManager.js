@@ -213,6 +213,17 @@ class Project {
         if (!this.id || !ProjectManager.get(this.id)) return false;
         return true;
     }
+
+    /**
+     * Delete this project.
+     */
+    delete() {
+        operation(db => db.prepare("DELETE FROM projects WHERE id = ?").run(this.id));
+        operation(db => db.prepare("DELETE FROM comments WHERE projectID = ?").run(this.id));
+        operation(db => db.prepare("DELETE FROM projectPermissions WHERE projectID = ?").run(this.id));
+        operation(db => db.prepare("DELETE FROM releases WHERE projectID = ?").run(this.id));
+        delete this;
+    }
 }
 
 module.exports = ProjectManager;

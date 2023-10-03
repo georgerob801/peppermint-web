@@ -1,0 +1,44 @@
+extends /main/layouts/generic
+
+block title
+    title= `peppermint - ${release.version}`
+
+block postHead
+    link(rel="stylesheet" href="/css/manage/release.css" type="text/css")
+
+    script.
+        $(document).ready(() => {      
+            $("textarea").trigger("oninput");
+        });
+
+block content
+    - req.query ??= {}
+    - let query = req.query
+
+    a.btn.btn-primary.mb-2(href=`/manage/${project.id}`) #[i.fa-solid.fa-arrow-left(style="margin-right: 5px;")] back
+    h1.clmp(class=(query.message || query.error ? "mb-2" : "mb-4")) manage&nbsp;-&nbsp;#{release.version || release.timestamp}
+    - if (query.message)
+        .alert.alert-success.mb-3.d-flex.align-items-center
+            .me-3
+                i.fa-solid.fa-check
+            div= query.message || "what"
+    - if (query.error)
+        .alert.alert-danger.mb-3.d-flex.align-items.center
+            .me-3
+                i.fa-solid.fa-xmark
+            div= query.error || "what"
+    form(action=`/manage/${project.id}/release/${release.timestamp}` method="POST")
+        h3 basic info
+        .mb-3
+            label.form-label(for="version") version name
+            input.form-control#version(type="text" placeholder=release.timestamp name="version" value=(editBasicInfo && query.version ? query.version : release.version) disabled=!editBasicInfo)
+
+        .mb-3
+            label.form-label(for="releaseNotes") release notes
+            textarea.form-control#releaseNotes(name="releaseNotes" rows=1 oninput="this.style.height = \"\"; this.style.height = this.scrollHeight + \"px\";" disabled=!editBasicInfo)= release.releaseNotes
+
+        .mb-3
+            label.form-label(for="timestamp") date
+            input.form-control#timestamp(name="timestamp" type="date" value=`${new Date(release.timestamp).getFullYear()}-${("0" + (new Date(release.timestamp).getMonth() + 1).toString()  ).slice(-2)}-${("0" + new Date(release.timestamp).getDate()).slice(-2)}`)
+
+        button.btn.btn-success(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes

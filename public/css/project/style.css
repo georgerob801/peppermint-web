@@ -63,3 +63,19 @@ main .releases small {
 main .releases .download-button {
     color: var(--light);
 }
+
+.comments .delete-overlay {
+    opacity: 0;
+    transition: opacity 0.2s;
+    background-color: #1a1a1a8f;
+    color: var(--light);
+    border-radius: 24px;
+}
+
+.comments .delete-overlay:hover {
+    opacity: 1;
+}
+
+.comments .delete-comment {
+    cursor: pointer;
+}

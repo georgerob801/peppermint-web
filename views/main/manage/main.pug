@@ -4,6 +4,7 @@ block title
     title peppermint - #{(project.title || project.id).substr(0, 16)}#{(project.title || project.id).length > 16 ? "..." : ""} - manage
 
 block postHead
+    link(rel="stylesheet" href="/css/project/style.css" type="text/css")
     link(rel="stylesheet" href="/css/project/comment.css" type="text/css")
     link(rel="stylesheet" href="/css/manage/style.css" type="text/css")
 
@@ -38,11 +39,19 @@ block content
             input.form-control#title(type="text" placeholder=project.id name="title" value=(canEditTitle && query.title ? query.title : project.title) disabled=!canEditTitle)
         .mb-3
             label.form-label(for="image") image url
-            input.form-control#image(type="text" name="image" value=project.iconURL disabled=!canEditDescriptionAndImage)
+            input.form-control#image(type="text" name="image" value=(canEditDescriptionAndImage && query.image ? query.image : project.iconURL) disabled=!canEditDescriptionAndImage)
         .mb-3
             label.form-label(for="description") description
             textarea.form-control#description(name="description" rows=1 oninput="this.style.height = \"\"; this.style.height = this.scrollHeight + \"px\";" disabled=!canEditDescriptionAndImage)= project.description
 
+        button.btn.btn-success.mb-4(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes
+    
+    h3 releases
+    .mb-3.releases
+        .w-100.text-center
+            i.fa-solid.fa-spinner.fa-spin
+
+    - if (canEditSettings)
         h3 contributors
         .mb-3.contributors
             .w-100.text-center
@@ -53,5 +62,7 @@ block content
         .mb-3.comments
             .w-100.text-center
                 i.fa-solid.fa-spinner.fa-spin
-
-        button.btn.btn-success(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes
+    
+        .delete-project.btn.btn-danger.d-flex.justify-content-center.align-items-center
+            i.fa-solid.fa-dumpster-fire.me-2
+            span delete project

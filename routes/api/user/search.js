@@ -23,7 +23,7 @@ module.exports = {
             let sanitisedUsers = users.map(x => {
                 return {
                     id: x.id,
-                    handle: x.iconURL,
+                    handle: x.handle,
                     displayName: x.displayName || x.handle,
                     iconURL: x.iconURL || ""
                 }

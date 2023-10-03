@@ -18,7 +18,7 @@ module.exports = {
 
             let canComment = req.user.permissions.has(USER_FLAGS.CAN_COMMENT);
 
-            let canManage = req.user.permissionsFor(project.id).has(PROJECT_FLAGS.ALL - PROJECT_FLAGS.CONTRIBUTOR);
+            let canManage = req.user.permissionsFor(project.id).orHas(PROJECT_FLAGS.ALL - PROJECT_FLAGS.CONTRIBUTOR);
 
             res.render("main/project/main", { req, project, releases: project.lastNReleases(5, 0, true), comments, canComment, canManage });
         }
