@@ -14,7 +14,7 @@ const { operation } = require("./DatabaseManager");
 const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
 // permissions management
-const { getProject: getProjectPermissions, getUser: getUserPermissions } = require("./PermissionManager");
+const { getProject: getProjectPermissions, getUser: getUserPermissions, USER_FLAGS } = require("./PermissionManager");
 
 /**
  * @typedef {Object} User
@@ -52,7 +52,9 @@ class UserManager {
      * @returns {User} A new user.
      */
     static newUser() {
-        return new User();
+        let user = new User();
+
+        return user;
     }
 
     /**

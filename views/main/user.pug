@@ -18,11 +18,20 @@ block preContent
             div
                 h4.user-select-none project stuff
                 a.btn.btn-primary(href="/new") #[i.fa-solid.fa-file] new project
-                a.btn.btn-primary.ms-3(href="/manage") #[i.fa-solid.fa-pen-to-square] manage projects
             .mt-4
                 h4.user-select-none user stuff
                 a.btn.btn-danger(href="/logout") #[i.fa-solid.fa-right-from-bracket] logout
-            
+                - if (canEditDisplayName || canEditIconURL)
+                    form.mt-3(action=`/user/${user.handle}` method="POST")
+                        - if (canEditDisplayName)
+                            .mb-3
+                                label.form-label(for="displayName") display name
+                                input.form-control#displayName(type="text" placeholder=req.user.handle name="displayName" value=(user.displayName || ""))
+                        - if (canEditIconURL)
+                            .mb-3
+                                label.form-label(for="iconURL") icon url
+                                input.form-control#iconURL(type="text" name="iconURL" value=(user.iconURL || ""))
+                        button.mt-2.btn.btn-success(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] save changes
 
         h2.col-light.mb-3.text-center.user-select-none public profile
 

@@ -22,6 +22,7 @@ module.exports = {
             res.json(comment);
         },
         delete: (req, res) => {
+            console.log(req.user);
             if (!req.user) {
                 res.status(401);
                 return res.json({
@@ -40,7 +41,7 @@ module.exports = {
                 });
             }
 
-            if (!req.user.permissionsFor(comment.projectID).has(PROJECT_FLAGS.EDIT_SETTINGS) && comment.userID != req.userID) {
+            if (!req.user.permissionsFor(comment.projectID).has(PROJECT_FLAGS.EDIT_SETTINGS) && comment.userID != req.user.id) {
                 res.status(403);
                 return res.json({
                     status: 403,

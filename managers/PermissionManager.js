@@ -37,9 +37,11 @@ class PermissionManager {
 
     static get USER_FLAGS() {
         return {
-            CAN_COMMENT:            0b0000_0001,
-            CAN_CREATE_PROJECTS:    0b0000_0010,
-            CAN_UPLOAD_FILES:       0b0000_0100
+            CAN_COMMENT:                0b0000_0001,
+            CAN_CREATE_PROJECTS:        0b0000_0010,
+            CAN_UPLOAD_FILES:           0b0000_0100,
+            CAN_CHANGE_DISPLAY_NAME:    0b0000_1000,
+            CAN_CHANGE_ICON_URL:        0b0001_0000
         }
     }
 

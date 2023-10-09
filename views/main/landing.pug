@@ -16,6 +16,9 @@ block content
                 +projectpreview(projects[i], "col-12 col-sm-6 col-md-4 col-lg-3")
     .own-projects.mt-4
         h4.user-select-none your projects
-        .row
-            - for (let i = 0; i < ownProjects.length; i++)
-                +projectpreview(ownProjects[i], "col-12 col-sm-6 col-md-4 col-lg-3")
+        - if (!ownProjects || !ownProjects.length)
+            div you don't have any projects.
+        - else
+            .row
+                - for (let i = 0; i < ownProjects.length; i++)
+                    +projectpreview(ownProjects[i], "col-12 col-sm-6 col-md-4 col-lg-3")

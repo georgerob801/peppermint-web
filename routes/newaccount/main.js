@@ -18,6 +18,12 @@ module.exports = {
             let u = newUser();
             u.handle = req.body.username;
             u.setPassword(req.body.password);
+            
+            u.permissions.allow(USER_FLAGS.CAN_COMMENT);
+            u.permissions.allow(USER_FLAGS.CAN_CHANGE_DISPLAY_NAME);
+            u.permissions.allow(USER_FLAGS.CAN_CHANGE_ICON_URL);
+            u.permissions.allow(USER_FLAGS.CAN_CREATE_PROJECTS);
+            u.permissions.allow(USER_FLAGS.CAN_UPLOAD_FILES);
 
             u.save();
 

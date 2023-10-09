@@ -25,37 +25,40 @@ block postHead
     script.
         $(document).ready(() => {
             const userID = "#{req.user.id}";
-            let thing = $(`
-            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center delete-overlay">
-                <div class="delete-comment">
-                    <div class="d-flex align-items-center delete-comment-content">
-                        <i class="fa-solid fa-dumpster-fire me-2"></i>
-                        <div>click to delete</div>
+            $(`.comment[data-user-id=${CSS.escape(userID)}]`).toArray().forEach(x => {
+                let thing = $(`
+                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center delete-overlay">
+                    <div class="delete-comment">
+                        <div class="d-flex align-items-center delete-comment-content">
+                            <i class="fa-solid fa-dumpster-fire me-2"></i>
+                            <div>click to delete</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            `)
-            $(`.comment[data-user-id=${CSS.escape(userID)}]`).prepend(thing);
-            $(thing).find(".delete-comment").on("click", async e => {
+                `)
+                $(x).prepend(thing);
                 let commentID = $(thing).parent().attr("data-comment-id");
-                $(`.comment[data-comment-id=${CSS.escape(commentID)}] .delete-comment-content`).html(`<i class="fa-solid fa-spinner fa-spin"></i>`);
-                
-                try {
-                    let res = await $.ajax({
-                        url: `/api/comment/${commentID}`,
-                        method: "DELETE"
-                    });
+                console.log(`pain: ${commentID}`);
+                $(thing).find(".delete-comment").on("click", async e => {
+                    $(`.comment[data-comment-id=${CSS.escape(commentID)}] .delete-comment-content`).html(`<i class="fa-solid fa-spinner fa-spin"></i>`);
+                    
+                    try {
+                        let res = await $.ajax({
+                            url: `/api/comment/${commentID}`,
+                            method: "DELETE"
+                        });
 
-                    if (res.status == 200) {
-                        $(`.comment-delete-message`).css("color", "var(--bs-success)");
-                        $(`.comment-delete-message`).text("deleted comment successfully.");
-                        $(`.comment[data-comment-id=${CSS.escape(commentID)}]`).remove();
+                        if (res.status == 200) {
+                            $(`.comment-delete-message`).css("color", "var(--bs-success)");
+                            $(`.comment-delete-message`).text("deleted comment successfully.");
+                            $(`.comment[data-comment-id=${CSS.escape(commentID)}]`).remove();
+                        }
+                    } catch (e) {
+                        $(`.comment-delete-message`).css("color", "var(--bs-danger)");
+                        $(`.comment-delete-message`).text("couldn't delete comment.");
                     }
-                } catch (e) {
-                    $(`.comment-delete-message`).css("color", "var(--bs-danger)");
-                    $(`.comment-delete-message`).text("couldn't delete comment.");
-                }
-            });
+                });
+            })
         });
 
 block content

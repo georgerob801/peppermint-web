@@ -6,6 +6,7 @@ const { operation } = require("../../managers/DatabaseManager");
 
 const { get: getProject } = require("../../managers/ProjectManager");
 
+const { USER_FLAGS } = require("../../managers/PermissionManager");
 const { PROJECT_FLAGS } = require("../../managers/PermissionManager");
 
 const { getForUser } = require("../../managers/CommentManager");
@@ -33,7 +34,30 @@ module.exports = {
                 comments[i].user = getUser(comments[i].userID);
             }
 
-            res.render("main/user", { req, user, projects, comments });
+            let canEditDisplayName = req.user.permissions.has(USER_FLAGS.CAN_CHANGE_DISPLAY_NAME);
+            let canEditIconURL = req.user.permissions.has(USER_FLAGS.CAN_CHANGE_ICON_URL);
+
+            res.render("main/user", { req, user, projects, comments, canEditDisplayName, canEditIconURL });
+        },
+        post: (req, res, next) => {
+            if (!req.user) return res.sendStatus(401);
+
+            let user = findByProperty("handle", req.params?.handle);
+            if (!user) return next();
+
+            if (user.id != req.user.id) return res.sendStatus(403);
+
+            if (req.body.displayName !== undefined) {
+                user.displayName = req.body.displayName.toString().trim().substring(0, 50);
+            }
+
+            if (req.body.iconURL !== undefined) {
+                user.iconURL = req.body.iconURL.toString().trim().substring(0, 256);
+            }
+
+            user.save();
+
+            res.redirect(`/user/${user.handle}`);
         }
     }
 }
