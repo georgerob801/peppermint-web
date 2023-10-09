@@ -94,7 +94,7 @@ block content
                                     h5.mb-0.clmp= releases[i].version || "new version"
                                     small= new Date(releases[i].timestamp).toLocaleDateString("en-gb", { year: "numeric", month: "numeric", day: "numeric" })
                                 .d-flex.align-items-center
-                                    a.btn.btn-primary.download-button(href=`/projects/${project.id}/release/${releases[i].timestamp}/download`)
+                                    a.btn.btn-primary.download-button(href=`/project/${project.id}/release/${releases[i].timestamp}/download` target="__blank")
                                         i.fa-solid.fa-download
     if (canComment || (comments && comments.length))
         hr

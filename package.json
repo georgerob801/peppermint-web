@@ -19,6 +19,7 @@
     "cssesc": "^3.0.0",
     "encodeurl": "^1.0.2",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.1",
     "express-routemap": "^1.6.0",
     "moment": "^2.29.4",
     "nodemon": "^2.0.22",

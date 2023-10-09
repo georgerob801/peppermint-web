@@ -1,10 +1,15 @@
 extends /main/layouts/generic
 
 block title
-    title= `peppermint - ${release.version}`
+    title= `peppermint - ${release.version || release.timestamp}`
 
 block postHead
     link(rel="stylesheet" href="/css/manage/release.css" type="text/css")
+    script(src="/js/manage/release.js")
+
+    script.
+        var projectID = "!{project.id}";
+        var releaseTimestamp = !{release.timestamp};
 
     script.
         $(document).ready(() => {      
@@ -27,7 +32,7 @@ block content
             .me-3
                 i.fa-solid.fa-xmark
             div= query.error || "what"
-    form(action=`/manage/${project.id}/release/${release.timestamp}` method="POST")
+    form(action=`/manage/${project.id}/release/${release.timestamp}` method="POST" enctype="multipart/form-data")
         h3 basic info
         .mb-3
             label.form-label(for="version") version name
@@ -37,8 +42,31 @@ block content
             label.form-label(for="releaseNotes") release notes
             textarea.form-control#releaseNotes(name="releaseNotes" rows=1 oninput="this.style.height = \"\"; this.style.height = this.scrollHeight + \"px\";" disabled=!editBasicInfo)= release.releaseNotes
 
-        .mb-3
-            label.form-label(for="timestamp") date
-            input.form-control#timestamp(name="timestamp" type="date" value=`${new Date(release.timestamp).getFullYear()}-${("0" + (new Date(release.timestamp).getMonth() + 1).toString()  ).slice(-2)}-${("0" + new Date(release.timestamp).getDate()).slice(-2)}`)
+        .row
+            .col-12.col-md-6.mb-3
+                label.form-label(for="timestampDate") date
+                input.form-control#timestampDate(name="timestampDate" type="date" value=`${new Date(release.timestamp).getFullYear()}-${("0" + (new Date(release.timestamp).getMonth() + 1).toString()).slice(-2)}-${("0" + new Date(release.timestamp).getDate()).slice(-2)}`)
 
-        button.btn.btn-success(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes
+            .col-12.col-md-6.mb-3
+                label.form-label(for="timestampTime") time
+                input.form-control#timestampTime(name="timestampTime" type="time" value=`${("0" + new Date(release.timestamp).getUTCHours()).slice(-2)}:${("0" + new Date(release.timestamp).getUTCMinutes()).slice(-2)}`)
+
+        .mb-3
+            label.form-label(for="file") file
+            - if (editFile)
+                - if (release.hasFile())
+                    .mb-2.clmp= release.file.name
+                    .btn.btn-primary.change-file #[i.fa-solid.fa-file-pen(style="margin-right: 5px;")] change file
+                - else
+                        input.form-control#file(type="file" name="file")
+
+        button.btn.btn-success.mb-3(type="submit") #[i.fa-solid.fa-check(style="margin-right: 5px;")] submit changes
+
+    - if (!release.published)
+        .row
+            .col-12.col-md-6
+                button.btn.btn-danger.mb-3.mb-md-0.delete-button.w-100 #[i.fa-solid.fa-xmark(style="margin-right: 5px;")] delete release
+            .col-12.col-md-6
+                button.btn.btn-primary.publish-button.w-100 #[i.fa-solid.fa-eye(style="margin-right: 5px;")] publish release
+    - else 
+        button.btn.btn-danger.mb-3.mb-md-0.delete-button.w-100 #[i.fa-solid.fa-xmark(style="margin-right: 5px;")] delete release

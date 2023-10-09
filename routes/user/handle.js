@@ -11,7 +11,7 @@ const { PROJECT_FLAGS } = require("../../managers/PermissionManager");
 const { getForUser } = require("../../managers/CommentManager");
 
 module.exports = {
-    path: "/:handle([a-z_\\-.]{1,30})",
+    path: "/:handle([0-9A-Za-z_\\-.]{1,30})",
     priority: 0,
     methods: {
         get: (req, res, next) => {

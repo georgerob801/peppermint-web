@@ -14,6 +14,7 @@ serverManager.setSettingsDir(join(__dirname, "config", "server"));
 
 // set up db
 require("./managers/DatabaseManager").init(join(__dirname, "databases", "db.sqlite"));
+require("./managers/UploadManager").dbMan.init(join(__dirname, "databases", "uploads.sqlite"));
 
 // set up stuff for pug
 serverManager.app.locals.basedir = join(__dirname, "views");

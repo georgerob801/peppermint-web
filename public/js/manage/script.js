@@ -349,10 +349,33 @@ $("document").ready(() => {
     });
 
     $.ajax({
-        url: `/api/project/${projectID}/release/all`,
+        url: `/api/project/${projectID}/release/all?includeUnpublished=true`,
         type: "GET",
         success: async res => {
             $(".releases").empty();
+
+            if (canCreate) {
+                let button = $(`
+                <button class="new-release btn btn-primary mb-2">
+                    <i class="fa-solid fa-plus" style="margin-right: 5px"></i>
+                    <span>new release</span>
+                </button>
+                `)
+
+                $(button).on("click", async e => {
+                    let res2 = await $.ajax({
+                        url: `/api/project/${projectID}/release/new`,
+                        type: "POST"
+                    });
+
+                    if (res2.status == 200) {
+                        window.location.href = `/manage/${projectID}/release/${res2.releaseTimestamp}`;
+                    }
+                })
+
+                $(".releases").append(button);
+            }
+
             res.forEach(x => {
                 $(".releases").append(releaseHTML(x));
             })

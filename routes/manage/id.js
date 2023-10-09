@@ -14,12 +14,14 @@ module.exports = {
             let perms = req.user.permissionsFor(project.id);
             if (!perms.orHas(PROJECT_FLAGS.ALL - PROJECT_FLAGS.CONTRIBUTOR)) return next();
 
-            let canEditTitle = perms.has(PROJECT_FLAGS.EDIT_TITLE);
-            let canEditDescriptionAndImage = perms.has(PROJECT_FLAGS.EDIT_DESCRIPTION_AND_IMAGE);
+            let canEditTitle = perms.orHas(PROJECT_FLAGS.EDIT_TITLE | PROJECT_FLAGS.EDIT_SETTINGS);
+            let canEditDescriptionAndImage = perms.orHas(PROJECT_FLAGS.EDIT_DESCRIPTION_AND_IMAGE | PROJECT_FLAGS.EDIT_SETTINGS);
 
             let canEditSettings = perms.has(PROJECT_FLAGS.EDIT_SETTINGS);
+            
+            let canCreate = req.user.permissionsFor(project.id).orHas(PROJECT_FLAGS.CREATE_RELEASE | PROJECT_FLAGS.EDIT_SETTINGS);
 
-            res.render("main/manage/main", { req, project, canEditTitle, canEditDescriptionAndImage, canEditSettings });
+            res.render("main/manage/main", { req, project, canEditTitle, canEditDescriptionAndImage, canEditSettings, canCreate });
         },
         post: (req, res, next) => {
             let project = getProject(req.params?.projectID);

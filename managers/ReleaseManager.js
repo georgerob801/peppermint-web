@@ -2,6 +2,8 @@
 
 const { operation } = require("./DatabaseManager");
 
+const { get: getUpload, dbMan: uploadDB } = require("./UploadManager");
+
 class ReleaseManager {
     constructor() {
         if (this instanceof ReleaseManager) throw Error("ReleaseManager cannot be instantiated.");
@@ -48,8 +50,6 @@ class ReleaseManager {
 class Release {
     /** @type {String} */
     projectID;
-    /** @type {Number} */
-    timestamp;
     /** @type {String} */
     version;
     /** @type {String} */
@@ -59,8 +59,42 @@ class Release {
     /** @type {Boolean} */
     published;
 
+    #_savedTimestamp;
+    #_actualTimestamp;
+
     constructor() {
         this.timestamp = new Date().getTime();
+    }
+
+    #_file;
+
+    get file() {
+        if (!this.fileLocation) return undefined;
+        if (!this.#_file) this.#_file = getUpload(this.fileLocation);
+        return this.#_file;
+    }
+
+    set file(val) {
+        // do this
+        this.#_file = val;
+        this.fileLocation = val.id;
+    }
+
+    set timestamp(val) {
+        this.#_actualTimestamp = val;
+    }
+
+    /** @type {Number} */
+    get timestamp() {
+        return this.#_actualTimestamp || this.#_savedTimestamp;
+    }
+
+    /**
+     * Check if this release has a file.
+     * @returns {Boolean} True/false depending on whether this release has a file.
+     */
+    hasFile() {
+        return this.file !== undefined;
     }
 
     /**
@@ -70,6 +104,7 @@ class Release {
      */
     setFromEntry(entry) {
         this.projectID = entry.projectID;
+        this.#_savedTimestamp = entry.timestamp;
         this.timestamp = entry.timestamp;
         this.version = entry.version;
         this.releaseNotes = entry.releaseNotes;
@@ -86,8 +121,24 @@ class Release {
         if (!this.projectID) throw new Error("This release is not attributed to a project.");
         this.timestamp ??= new Date().getTime();
 
-        operation(db => db.prepare("REPLACE INTO releases (projectID, timestamp, version, releaseNotes, fileLocation, published) VALUES (?, ?, ?, ?, ?, ?)").run(this.projectID, this.timestamp, this.version, this.releaseNotes, this.fileLocation, this.published ? 1 : 0));
+        if (ReleaseManager.getRelease(this.projectID, this.#_savedTimestamp)) {
+            operation(db => db.prepare("UPDATE releases SET projectID = ?, timestamp = ?, version = ?, releaseNotes = ?, fileLocation = ?, published = ? WHERE projectID = ? AND timestamp = ?").run(this.projectID, this.timestamp, this.version, this.releaseNotes, this.fileLocation, this.published ? 1 : 0, this.projectID, this.#_savedTimestamp));
+        } else {
+            operation(db => db.prepare("REPLACE INTO releases (projectID, timestamp, version, releaseNotes, fileLocation, published) VALUES (?, ?, ?, ?, ?, ?)").run(this.projectID, this.timestamp, this.version, this.releaseNotes, this.fileLocation, this.published ? 1 : 0));
+        }
+
+        this.#_savedTimestamp = this.timestamp;
+
         return this;
+    }
+
+    /**
+     * Delete this release.
+     */
+    delete() {
+        this.file?.delete();
+        operation(db => db.prepare("DELETE FROM releases WHERE projectID = ? AND timestamp = ?").run(this.projectID, this.#_savedTimestamp));
+        delete this;
     }
 }
 

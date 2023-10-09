@@ -3,7 +3,7 @@
 const { get } = require("../../managers/ProjectManager");
 
 module.exports = {
-    path: "/:projectID([0-9]+)/release/:timestamp(-{0,1}[0-9]+)",
+    path: "/:projectID([0-9]+)/release/:timestamp(-{0,1}[0-9]+)/download",
     priority: 0,
     methods: {
         get: (req, res, next) => {
@@ -13,7 +13,10 @@ module.exports = {
             if (isNaN(timestamp)) return next();
             let release = project.getRelease(timestamp);
             if (!release || !release.published) return next();
-            res.render("main/project/release", { req, project, release });
+            if (!release.file?.data) return next();
+            res.set("Content-Disposition", `attachment; filename=${encodeURIComponent(release.file.name)}`);
+            res.type(release.file.mime);
+            res.send(release.file.data);
         }
     }
 }
